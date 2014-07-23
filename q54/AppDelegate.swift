@@ -117,6 +117,22 @@ func energy (network: Dictionary<Int, Neuron>, data: Array<UserInputChain>) -> D
     return energy
 }
 
+func createSituation(userChain: Dictionary<Int,UserInput>) -> Dictionary<Int, Signal>{
+    
+    var situation = Dictionary<Int, Signal>()
+    
+    for value in userChain.values {
+        // if key has a connection, store information
+        var signal = Signal()
+        signal.identifikation = value.indentification
+        signal.potential = value.target
+        situation[value.indentification] = signal
+        
+    }
+    return situation
+    
+}
+
 var eta:Double =  0.90      // eta (learning rate)
 var alpha:Double =  0.04    // alpha (momentum for learning rate)
 
@@ -133,51 +149,17 @@ func updateWeights (network: Dictionary<Int, Neuron>, data: Array<UserInputChain
         
         for userinputchain in data {
             
+            
             var knowledge:UserInput! = userinputchain.userChain[neuron.indentification]
             
-            var situation = Dictionary<Int, Signal>()
-            for value in userinputchain.userChain.values {
-                // if key has a connection, store information
-                var signal = Signal()
-                signal.identifikation = value.indentification
-                signal.potential = value.target
-                situation[value.indentification] = signal
-                
-            }
+            var situation = createSituation(userinputchain.userChain)
+
+   gith
             
-            
-            // logit(p) =  -log(1/p - 1)
-            
-//            var targetBefore:Double = -log(1.0/knowledge.target - 1.0)
-//            if (targetBefore > 45) {
-//                targetBefore = 45
-//            } else if(targetBefore) < -45 {
-//                targetBefore = -45
-//            }
-            
-            
-            
-            
-//            var totalweight:Double = 0
-//            for synapse in neuron.synapses.values {
-//                totalweight = totalweight + synapse.weight
-//            }
-            
-            // error contribution
-            
-            
-//            for synapse in neuron.synapses.values {
-//                NSLog("Neuron\(neuron.indentification) Synapse\(synapse.identification) before \(synapse.weight)")
-//                synapse.weight = synapse.weight + ((synapse.weight/totalweight) * (sumInputs(neuron) - targetBefore)) * eta
-//                NSLog("Neuron\(neuron.indentification) Synapse\(synapse.identification) after \(synapse.weight)")
-//            }
-//            
-            
-            
-            var signal:Double = sumInputs(neuron, situation)
-            var error: Double =  knowledge.target - sigmoid(signal)
+            var signal:Double = sigmoid(sumInputs(neuron, situation))
+            var error: Double =  knowledge.target - signal
             NSLog("Neuron: \(neuron.indentification) error: \(error) expected output: \(knowledge.target) with eta: \(eta)")
-            var derivative: Double = (1 - sigmoid(signal)) * sigmoid(signal) // derivative of the sigmoid:  (1 / 1 + exp(-x))'
+            var derivative: Double = (1 - signal) * signal // derivative of the sigmoid:  (1 / 1 + exp(-x))'
             
 //
             for synapse in neuron.synapses.values {
@@ -323,55 +305,109 @@ class Package {
 }
 
 
+func entropy(network: Dictionary<Int,Neuron>,chain: UserInputChain) -> Int {
+    var nextNeuronId = Int()
+    
+    
+//    calculate for each neuron that has no userinput yet, the information
+//    
+//    calculate for each neuron based on its possible outcomes, how this effects the information of every connected neuron (that i)
+//    and sum up which is most reduced
+//    
+//    
+//    for each
+//    
+//    find out, about the not yet given possible inputs
+//    
+//    sample each one as 0 and 0.5 and 1 (or the user pattern) as inputs
+//    
+//    choose the one, that decrease shannon entropy the most?
+//    
+    
+    return nextNeuronId
+}
+
+
+func entropy(neuron: Neuron,chain: UserInputChain) {
+    for synapse in neuron.synapses.values {
+        
+    }
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBOutlet var window: NSWindow
     
     @IBOutlet var resultTextField : NSTextField
-    
     @IBOutlet var inputTextField : NSTextField
-    
-    
-    
-    
-    
     
     
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
+         NSLog("launch")
+        
+        // i cant get this bullshit to work
         
     }
     
     func applicationWillTerminate(aNotification: NSNotification?) {
         // Insert code here to tear down your application
+        NSLog("terminate")
     }
     
-    @IBAction func clicked(sender : AnyObject) {
+    @IBAction func clickedTrain(sender : AnyObject) {
         
-        NSLog("click")
         var package = initialize()
+        
+//        self.resultTextField.stringValue = package.network[1]?.question
         
         
         var n = 0
         while n < 100 {
-           // sendSignals(network)
+            // sendSignals(network)
             // calculateNetworkError(network)
             updateWeights(package.network, package.userinputchain)
             
             n++
         }
         
-        self.resultTextField.stringValue = "test"
+//        self.inputTextField.stringValue = package.network[2]?.question
         
-        for neuron in network.values {
+    }
+    
+    
+
+    
+    @IBAction func clicked(sender : AnyObject) {
+        
+  
+        
+        if neuron omega yes -> start training
+            display first question
+        
+        if neuron omega no -> ask question what has been missed. Add it to the cycle
+        
+        continue with the routine
+        
+        routine:
+            calculate based on previous input and user, the next most interesting question (that maximizes knowledge)
+        
+        
+
+        
+        
+        
+        
+        NSLog("click")
+               for neuron in network.values {
 //            self.resultTextField.stringValue = "neuron  \(neuron.indentification) has the potential:  \(neuron.signal.potential). The energy is:"
         }
         
     }
     
     
-    
+    // yet another interesting read: https://www.byclb.com/TR/Tutorials/neural_networks/ch10_1.htm
     
     
 }
