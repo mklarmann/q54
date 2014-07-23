@@ -28,6 +28,7 @@ class Neuron {
     var question = String()
     var answers = Array<String>()
     
+    var entropy = Double()
     // create signal function
     // propagate signal
     // lean with feedbacked error
@@ -154,12 +155,13 @@ func updateWeights (network: Dictionary<Int, Neuron>, data: Array<UserInputChain
             
             var situation = createSituation(userinputchain.userChain)
 
-   gith
             
             var signal:Double = sigmoid(sumInputs(neuron, situation))
             var error: Double =  knowledge.target - signal
+            
             NSLog("Neuron: \(neuron.indentification) error: \(error) expected output: \(knowledge.target) with eta: \(eta)")
-            var derivative: Double = (1 - signal) * signal // derivative of the sigmoid:  (1 / 1 + exp(-x))'
+            
+            var derivative: Double = (1 - signal) * signal // this is the derivative of the sigmoid (1 / 1 + exp(-x))
             
 //
             for synapse in neuron.synapses.values {
@@ -309,6 +311,15 @@ func entropy(network: Dictionary<Int,Neuron>,chain: UserInputChain) -> Int {
     var nextNeuronId = Int()
     
     
+    var max = 0.0
+    for neuron in network.values {
+        neuron.entropy = entropy(neuron,chain)
+        if max < neuron.entropy {
+            nextNeuronId = neuron.indentification
+            max = neuron.entropy
+        }
+    }
+    
 //    calculate for each neuron that has no userinput yet, the information
 //    
 //    calculate for each neuron based on its possible outcomes, how this effects the information of every connected neuron (that i)
@@ -328,10 +339,67 @@ func entropy(network: Dictionary<Int,Neuron>,chain: UserInputChain) -> Int {
 }
 
 
-func entropy(neuron: Neuron,chain: UserInputChain) {
-    for synapse in neuron.synapses.values {
+func entropy(neuron: Neuron,chain: UserInputChain) -> Double {
+
         
-    }
+        var situation = createSituation(chain.userChain)
+        
+        var sum = 0.0
+        for input in situation.values {
+            if let synapse = neuron.synapses[input.identifikation] {
+                sum = sum + synapse.weight*input.potential
+            }
+        }
+
+        var mutations = Array<Int>()
+        for synapse in neuron.synapses.values {
+            if !situation[synapse.identification] {
+                mutations.append(synapse.identification)
+            }
+        }
+        
+        
+        // sample 10/5 variants, because our counting system is terniary
+        
+        var string = ""
+        while string.utf16count < mutations.count {
+            string = string + "9"
+        }
+      
+      
+        var entropy = 0.0
+        var n = 0
+        while n < string.toInt() {
+            var string = "\(n)"
+            
+            var handleString = string
+            var oneSituation = Dictionary<Int, Signal>()
+            for index in mutations {
+                var signal = Signal()
+                signal.identifikation = index
+                var double = Double(string.substringToIndex(1).toInt()!)
+                signal.potential = double * 0.1
+                
+                oneSituation[index] = signal
+                handleString = handleString.substringFromIndex(1)
+            }
+            
+           
+            var more = sum
+            for input in oneSituation.values {
+                if let synapse = neuron.synapses[input.identifikation] {
+                    more = more + synapse.weight*input.potential
+                }
+            }
+            
+            entropy = entropy + sigmoid(more)*log(sigmoid(more))
+            
+            
+            n = n + 5
+        }
+    
+
+    return entropy
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -372,7 +440,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             n++
         }
         
-//        self.inputTextField.stringValue = package.network[2]?.question
+        var id = entropy(package.network, package.userinputchain[0])
+        self.inputTextField.stringValue = "next up neuron is \(id)"
         
     }
     
@@ -383,16 +452,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
   
         
-        if neuron omega yes -> start training
-            display first question
-        
-        if neuron omega no -> ask question what has been missed. Add it to the cycle
-        
-        continue with the routine
-        
-        routine:
-            calculate based on previous input and user, the next most interesting question (that maximizes knowledge)
-        
+//        if neuron omega yes -> start training
+//            display first question
+//        
+//        if neuron omega no -> ask question what has been missed. Add it to the cycle
+//        
+//        continue with the routine
+//        
+//        routine:
+//            calculate based on previous input and user, the next most interesting question (that maximizes knowledge)
+//        
         
 
         
