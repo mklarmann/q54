@@ -18,25 +18,8 @@ import q54
 class q54Tests: XCTestCase {
     
     // synapses to play with
-    let synapse = Synapse()
-    let synapse2 = Synapse()
-    let synapse3 = Synapse()
-    let synapse4 = Synapse()
-    
-    // signals to play with
-    let signal = Signal();
-    let signal2 = Signal();
-    
-    // neurons to play with
-    let neuron = Neuron()
-    let neuron2 = Neuron()
-    
-    // some interaction
-    let interaction: String = "Can you tell me something special I might have missed about X?"
-    
-    // neurons to play with
-    let userinput1 = UserInput()
-    let userinput2 = UserInput()
+    //    let synapse = Synapse()
+
     
     // end of variables
     
@@ -45,84 +28,7 @@ class q54Tests: XCTestCase {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         
         
-        
-        
-        //
-        //
-        //let identifications = [123,123,123]
-        //let axonLengths = [1,1,1]
-        //
-        
-        //class NeuronConnections {
-        //    let identification = Int()
-        //    let axonLength = Int() // to enforce lateral connections
-        //}
-        
-        
-        
-        synapse.weight = 1.0
-        synapse.identification = 2
-        
-        
-        synapse2.weight = -1.1
-        synapse2.identification = 1
-        
-        
-        synapse3.weight = 2.0
-        synapse3.identification = 1
-        
-        
-        synapse4.weight = 1.1
-        synapse4.identification = 2
-        
-        
-        let synapses: Dictionary<Int, Synapse> = [synapse.identification: synapse, synapse2.identification: synapse2]
-        let synapses2: Dictionary<Int, Synapse> = [synapse3.identification: synapse3, synapse4.identification: synapse4]
-        
-        
-        signal.identifikation = 2
-        signal.potential = 0.12
-        
-        
-        signal2.identifikation = 1
-        signal2.potential = 0.31
-        
-        
-        
-        neuron.indentification = 1
-        neuron.question = "Are you seeking for answers?"
-        neuron.answers = ["yes","no"]
-        neuron.synapses = synapses
-        neuron.inputStack[1] = signal
-        neuron.connections.append(1)
-        neuron.connections.append(2)
-        
-        
-        
-        neuron2.indentification = 2
-        neuron2.question = "Are you satisfied?"
-        neuron2.answers = ["yes","no"]
-        neuron2.synapses = synapses2
-        neuron2.inputStack[1] = signal2
-        neuron2.connections.append(2)
-        neuron2.connections.append(1)
-        
-        
-        
-      
-        userinput1.indentification = 1
-        userinput1.target = 1.0
-        
-        
-        userinput2.indentification = 2
-        userinput2.target = 0.0
-        
-        let initialInput = UserInputChain()
-        initialInput.userChain = [userinput1.indentification: userinput1, userinput2.indentification: userinput2]
-        
-        knowledgeGraph = [initialInput]
-
-        
+       
         
         
     }
